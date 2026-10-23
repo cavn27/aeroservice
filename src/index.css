@@ -1,0 +1,156 @@
+@import "tailwindcss";
+
+/* Modo oscuro por clase (lo usa el panel administrativo con su interruptor de tema). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+
+  /* Rojo del emblema Aerogas */
+  --color-brand-50: #fff1f1;
+  --color-brand-100: #ffdfe0;
+  --color-brand-500: #ef2a33;
+  --color-brand-600: #e30613;
+  --color-brand-700: #bd0510;
+
+  /* Azul del logotipo Aerogas */
+  --color-navy-50: #eef1fb;
+  --color-navy-100: #dce2f6;
+  --color-navy-200: #b9c4ec;
+  --color-navy-300: #8d9ddc;
+  --color-navy-400: #5a6fc4;
+  --color-navy-500: #3447ac;
+  --color-navy-600: #1f2d84;
+  --color-navy-700: #18236a;
+  --color-navy-800: #121a52;
+  --color-navy-900: #0c1239;
+  --color-navy-950: #070b24;
+
+  --color-ink: #12152b;
+  --color-muted: #5b6178;
+  --color-surface: #f4f6fb;
+
+  --shadow-card: 0 1px 2px rgb(16 24 64 / 0.04), 0 8px 24px -8px rgb(16 24 64 / 0.10);
+  --shadow-card-hover: 0 2px 4px rgb(16 24 64 / 0.06), 0 24px 48px -16px rgb(16 24 64 / 0.22);
+
+  --animate-accordion-down: accordion-down 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+  --animate-accordion-up: accordion-up 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+
+  @keyframes accordion-down {
+    from { height: 0; }
+    to { height: var(--radix-accordion-content-height); }
+  }
+  @keyframes accordion-up {
+    from { height: var(--radix-accordion-content-height); }
+    to { height: 0; }
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    @apply bg-white font-sans text-ink antialiased;
+  }
+  ::selection {
+    @apply bg-brand-600 text-white;
+  }
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-navy-500;
+  }
+}
+
+@utility container-page {
+  @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Buscador de estaciones: pines del mapa (Leaflet divIcon) */
+.ag-pin {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform-origin: bottom center;
+  transition: transform 0.2s ease;
+  filter: drop-shadow(0 6px 10px rgb(12 18 57 / 0.35));
+}
+.ag-pin__head {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 9999px;
+  background: #fff;
+  border: 3px solid var(--color-navy-600);
+}
+/* Leaflet fuerza width: auto en las imágenes de marcadores; se sobrescribe con mayor especificidad. */
+.ag-pin__head img,
+.leaflet-marker-icon .ag-pin__head img {
+  width: 30px !important;
+  height: 30px !important;
+  object-fit: contain;
+}
+.ag-pin__tail {
+  width: 0;
+  height: 0;
+  margin-top: -2px;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-top: 12px solid var(--color-navy-600);
+}
+.ag-pin--active {
+  transform: scale(1.18);
+}
+.ag-pin--active .ag-pin__head {
+  border-color: var(--color-brand-600);
+}
+.ag-pin--active .ag-pin__tail {
+  border-top-color: var(--color-brand-600);
+}
+.ag-user {
+  position: relative;
+  width: 22px;
+  height: 22px;
+  border-radius: 9999px;
+  background: #2563eb;
+  border: 4px solid #fff;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.3);
+}
+.ag-user span {
+  position: absolute;
+  inset: -12px;
+  border-radius: 9999px;
+  background: rgb(37 99 235 / 0.25);
+  animation: ag-pulse 2s ease-out infinite;
+}
+@keyframes ag-pulse {
+  from { transform: scale(0.4); opacity: 1; }
+  to { transform: scale(1.4); opacity: 0; }
+}
+.leaflet-tooltip.ag-tooltip {
+  border: 0;
+  border-radius: 0.75rem;
+  padding: 0.35rem 0.75rem;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  color: var(--color-ink);
+  box-shadow: var(--shadow-card);
+}
+.leaflet-container {
+  font-family: var(--font-sans);
+  background: #eef1fb;
+}
